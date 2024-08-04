@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Quiz App</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="quiz-container">
+        <div id="quiz">
+            <div class="question"></div>
+            <div class="options"></div>
+            <button onclick="nextQuestion()">Next Question</button>
+        </div>
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "What is the capital of France?",
+                options: ["Berlin", "Madrid", "Paris", "Lisbon"],
+                answer: "Paris"
+            },
+            {
+                question: "Which planet is known as the Red Planet?",
+                options: ["Earth", "Mars", "Jupiter", "Saturn"],
+                answer: "Mars"
+            },
+            {
+                question: "What is the largest ocean on Earth?",
+                options: ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
+                answer: "Pacific Ocean"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        function loadQuestion() {
+            const questionElement = document.querySelector('.question');
+            const optionsElement = document.querySelector('.options');
+
+            // Clear previous options
+            optionsElement.innerHTML = '';
+
+            const question = questions[currentQuestionIndex];
+            questionElement.textContent = question.question;
+
+            question.options.forEach(option => {
+                const optionElement = document.createElement('label');
+                optionElement.className = 'option';
+                optionElement.innerHTML = `<input type="radio" name="option" value="${option}"> ${option}`;
+                optionsElement.appendChild(optionElement);
+            });
+        }
+
+        function nextQuestion() {
+            const selectedOption = document.querySelector('input[name="option"]:checked');
+
+            if (selectedOption) {
+                const answer = selectedOption.value;
+                if (answer === questions[currentQuestionIndex].answer) {
+                    score++;
+                }
+
+                currentQuestionIndex++;
+
+                if (currentQuestionIndex < questions.length) {
+                    loadQuestion();
+                } else {
+                    showResult();
+                }
+            } else {
+                alert('Please select an answer.');
+            }
+        }
+
+        function showResult() {
+            const quizElement = document.getElementById('quiz');
+            const resultElement = document.getElementById('result');
+            quizElement.style.display = 'none';
+            resultElement.textContent = `You scored ${score} out of ${questions.length}!`;
+        }
+
+        // Initialize quiz
+        loadQuestion();
+    </script>
+</body>
+</html>
